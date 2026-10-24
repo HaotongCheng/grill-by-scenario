@@ -1,66 +1,76 @@
 # grill-by-scenario
 
-An agent skill that aligns a human and a coding agent on a decision by working through concrete scenarios, instead of asking a list of questions in the agent's own vocabulary.
+Align with your AI agent through concrete scenarios. Compare your proposal and the agent's using the same cases, then check how the agent applies the agreed intent to a new one.
 
-## The problem
+Use it on its own or as part of [Matt Pocock's workflow](docs/matt-workflow.md). It requires no other skills, issue tracker, or glossary.
 
-Grilling skills such as Matt Pocock's [`grill-me`](https://github.com/mattpocock/skills) are great at the start of a project. The agent walks a design tree and asks one decision at a time, and you answer.
+## Why scenarios
 
-A few weeks in, it stops working. The agent has built up project context and coined its own terms, often on purpose, in a glossary. Its questions now arrive in that vocabulary. You were not in every session, so you can no longer tell what you are being asked to decide, let alone whether the recommended answer is right.
+You and an agent can agree on a phrase while picturing different behavior. "Support partial imports" might mean saving valid rows immediately, or letting someone fix the errors before saving anything. A concrete case makes that difference easier to discuss.
 
-The goal of a grilling session was never to get through the question list. It was to make the agent's model of this part of the project match yours. `grill-by-scenario` is built around that goal.
+This skill helps you reason about those consequences together. It is useful when you are choosing between approaches, exploring a boundary, or catching up on project context. It also works within a larger plan: discuss one coherent uncertainty at a time and carry the decisions forward.
+
+## Try it
+
+After installing, ask:
+
+> Use grill-by-scenario to help me decide what should happen when a contact import contains invalid rows. Explain the situation first and let me describe what I would expect.
+
+You can also invoke `/grill-by-scenario` in Claude Code or `$grill-by-scenario` in Codex. Automatic selection depends on your agent's support and settings.
+
+You can bring a partial idea, ask for context, or request options. The skill gives you an opportunity to express a view; it does not require you to solve the problem unaided.
 
 ## How it works
 
-1. **Establish the situation.** The agent looks up the facts itself, then describes the current state and the decision in plain terms. It opens with one small, concrete scenario: who does what, and what happens next. Project terms are explained where they come up.
-2. **You go first.** The agent holds back its recommendation until you have said what you would expect. A partial idea, a question or a request for options all count.
-3. **Same scenarios, both proposals.** Your proposal and the agent's run through the same scenarios with the same starting facts. Disagreements get located in facts, desired behavior or trade-offs, and either side can change.
-4. **Clearest representation.** Short prose, a table, a diagram, an example or counterexample, or an interactive visual, whichever makes the difference visible.
-5. **The agent gets tested, not you.** Once a rule emerges, the agent applies it to a related case you have not discussed and predicts the outcome. If you would correct the prediction, you are not aligned yet.
+1. **Establish the situation.** The agent checks available evidence and explains the decision through a concrete case. It separates verified behavior from assumptions and hypothetical examples, explaining project terms where they arise.
+2. **Hear your expectations.** You have an opportunity to express a view before the agent recommends an approach. If you already gave your view or asked for advice, the conversation continues from there.
+3. **Compare on equal terms.** Your proposal and the agent's run through the same scenarios, starting facts, and comparison criteria. Either proposal can change. If you agree already, the agent checks the shared assumption.
+4. **Check the agent's understanding.** The agent applies the emerging rule to a related variation that has not been settled and invites correction.
+5. **Close with a usable account.** You confirm the agreed behavior, its boundaries, supporting scenario outcomes, and any unresolved or deferred decisions.
 
-The session closes with the agreed behavior, its boundaries, the scenarios that show it, and anything explicitly deferred. Silence is not agreement.
+A short explanation may be enough; tables, diagrams, or interactive visuals can help when the available tools support them. The number of scenarios and rounds follows the decision.
 
-## How it differs from `grill-me`
+See the [illustrative contact-import conversation](examples/contact-import.md) for a complete example, including a remaining blocker. It is a constructed demonstration, not a recorded user session or evidence of measured performance.
 
-| | `grill-me` / `grilling` | `grill-by-scenario` |
-|---|---|---|
-| Unit of a round | A numbered question | A concrete scenario |
-| Recommendation | Given with every question | Held back until you have expressed a view |
-| Comparison | One recommended answer per question | Both proposals run through the same scenarios |
-| Done when | Every branch of the design tree is visited | The agent correctly predicts an unsettled variation and you confirm the summary |
-| Built for | Stress-testing a plan before building | A human who lacks the agent's accumulated context |
+## Use it with Matt's workflow
 
-Several grilling variants use scenarios as one probing tactic. Here the scenario is the unit of discussion.
+The same core supports three paths:
 
-## When to use which
+| Path | How it fits |
+| --- | --- |
+| Standalone | Discuss a decision and finish with a shared account in the conversation. |
+| Start a workflow | Use scenario discussion, optionally maintain domain documents, then continue into `to-spec`, `to-tickets`, and `implement` when the intended scope is ready. |
+| Resolve a sticking point | Pause an existing grilling session, work through one uncertainty using scenarios, then return the decision and remaining questions to the original flow. |
 
-- Use `grilling` for a plan with many independent decisions, where you already share the vocabulary.
-- Use `grill-by-scenario` when one decision needs real shared understanding, or when the agent's questions have stopped making sense to you.
+Installing this skill does not replace Matt's entry points. The [integration guide](docs/matt-workflow.md) explains how to select the active discussion method, use `domain-modeling` alongside it, and preserve unresolved decisions when handing work onward.
 
-## Example
+## Relationship to grill-me
 
-> **Agent:** Right now, when a contact import hits a row with no email address, the whole import stops and nothing is saved. That's verified in the code. Here's a hypothetical: someone imports 300 contacts, and 12 rows have no email. They open the import results. What would you expect them to see and be able to do? A partial idea is fine.
->
-> **You:** Import the 288 good ones, and show me the 12 bad ones so I can fix them.
->
-> **Agent:** So the 288 are saved straight away, and the 12 are listed with the reason. Mine was close, but I'd held all 300 until the 12 were fixed. Same scenario, both ways: with yours, the 288 contacts can get this afternoon's campaign. With mine, nobody gets it until someone fixes 12 rows. One more variation we haven't discussed: a row has an email but no name. By your rule I'd import it and flag it, not reject it. Does that match what you'd expect?
+Both approaches aim for shared understanding. In Matt's [current `grilling` instructions](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md), the agent works through the available decisions in rounds and supplies a recommendation with each question. This skill changes the interaction:
+
+| Aspect | grill-by-scenario |
+| --- | --- |
+| Discussion focus | One coherent uncertainty, explored through as many scenarios as useful |
+| Recommendations | After you have had an opportunity to express a view, or when you request advice |
+| Comparison | Both proposals use the same cases, starting facts, and criteria |
+| Alignment check | The agent applies the agreed intent to a related new case; you can correct its interpretation |
+
+Scenario questions and human-first discussion have precedents. This project's contribution is the combination above, particularly the paired comparison and the check on the agent's interpretation. It can complement a broader grilling workflow without restricting use to people who lack technical background.
 
 ## Install
 
 With the [skills CLI](https://skills.sh):
 
 ```bash
-npx skills@latest add HaotongCheng/grill-by-scenario
+npx skills@latest add HaotongCheng/grill-by-scenario --skill grill-by-scenario
 ```
 
-Or copy `skills/grill-by-scenario/` into your agent's skills directory, for example `~/.claude/skills/` for Claude Code. `agents/openai.yaml` provides display metadata for Codex.
+This installs for the current project. Add `-g` for a personal installation across projects. Use `-a claude-code` or `-a codex` to select an agent, or choose one when prompted. See the [skills CLI documentation](https://github.com/vercel-labs/skills) for installation options.
 
-The skill is model-invoked. Ask for "grill by scenario" or "grill by example", or let the agent pick it up when a design discussion is hard to follow.
+For manual installation, copy the entire `skills/grill-by-scenario/` directory, including its supporting files, into `.claude/skills/` for a Claude Code project or `.agents/skills/` for a Codex project. The included `agents/openai.yaml` provides Codex display metadata.
 
-## Credits
+## Credits and license
 
-Inspired by the grilling skills in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). The skill text here is original.
+Created by Eric Cheng, inspired by Matt Pocock's [`grill-me`](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) and [`grilling`](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md) in [mattpocock/skills](https://github.com/mattpocock/skills).
 
-## License
-
-[MIT](LICENSE)
+[MIT License](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for the upstream attribution and license.

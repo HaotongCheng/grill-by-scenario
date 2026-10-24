@@ -7,6 +7,8 @@ description: Align human and agent expectations about a project decision through
 
 Build a shared model of how the relevant part of a project should behave. Make the consequences understandable enough for the human to shape the decision and for the agent to apply that intent to a related situation.
 
+Use the context available. This skill works independently without a repository, glossary, issue tracker, or other skills. When combining it with Matt Pocock's skills, read [Working with Matt Pocock's workflow](references/matt-pocock-workflow.md) for the handoff and interaction rules.
+
 Keep the session focused on the decision at hand. Track dependencies yourself and discuss one coherent uncertainty at a time; the human does not need to reconstruct the whole project or answer an entire decision tree.
 
 ## Establish the situation
@@ -46,5 +48,7 @@ Match the human's language and level of context. Keep visuals focused on the cur
 Once a rule or expectation emerges, apply it yourself to a meaningful related variation that has not yet been directly settled. Explain the predicted behavior and invite correction. This checks whether you can use the human's intent; it is not a quiz for the human.
 
 Close with a concise account of the agreed behavior, its boundaries, the scenario outcomes that demonstrate it, and any explicitly deferred decisions or unresolved facts. Treat the session as aligned when the human confirms that account, including any stated uncertainty, and no material contradiction remains within the agreed scope. A deferred choice stays deferred; silence is not agreement. If the human wants to stop earlier, summarize what is settled and what remains open.
+
+When returning to a larger workflow, carry back the resolved decisions, remaining questions, and effects on other decisions. Distinguish agreement on this topic from readiness of the whole task; identify unresolved questions that block the next step.
 
 Keep implementation and saving decisions within the user's existing authorization. Agreement on the model alone does not authorize editing project files, posting decisions, or implementing the result; when those actions are already authorized, continue without asking again.
